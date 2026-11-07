@@ -143,7 +143,7 @@ export default function Kasir() {
     });
   };
 
-  const handleSerialNumber = async (variantId: string, currentSn?: string) => {
+  const handleSerialNumber = async (variantId: string) => {
     const sn = await showPrompt(
       "Nomor Seri (Opsional)",
       `Masukkan nomor seri untuk produk ini (kosongkan jika tidak ada):`
@@ -285,7 +285,7 @@ export default function Kasir() {
                     <h3 className="font-bold text-on-surface mt-2 line-clamp-2 text-sm">
                       {product.name}
                     </h3>
-                    
+
                     {/* UKURAN DIBIKIN 1 KOLOM TEKS BIASA */}
                     <p className="text-xs text-secondary mt-1 truncate">
                       {variant.size} / {variant.color}
@@ -348,7 +348,7 @@ export default function Kasir() {
                     <p className="text-sm font-semibold truncate">
                       {item.productName}
                     </p>
-                    
+
                     {/* UKURAN DI KERANJANG JUGA DIBIKIN 1 KOLOM TEKS */}
                     <p className="text-[11px] text-secondary truncate mt-1">
                       {item.size} / {item.color}

@@ -52,7 +52,7 @@ export default function Transactions() {
         setTransactions(res.data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         showError("Gagal", "Tidak dapat memuat data transaksi.");
         setLoading(false);
       });

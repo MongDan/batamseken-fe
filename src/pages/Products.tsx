@@ -64,7 +64,7 @@ export default function Products() {
         setProducts(res.data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         showError("Gagal", "Tidak dapat memuat data produk.");
         setLoading(false);
       });
