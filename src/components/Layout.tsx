@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { apiFetch } from "../lib/api";
+import { apiFetch, getCsrfCookie } from "../lib/api"; // <-- Import getCsrfCookie
 import { showConfirm, showError } from "../lib/alert";
 import { useIdleTimer } from "../hooks/useIdleTimer";
 
@@ -31,6 +31,8 @@ export default function Layout({ children }: LayoutProps) {
     );
     if (isConfirmed) {
       try {
+        // Minta token CSRF baru sebelum logout
+        await getCsrfCookie();
         await apiFetch("/api/logout", { method: "POST" });
         navigate("/login");
       } catch (err) {
@@ -42,6 +44,8 @@ export default function Layout({ children }: LayoutProps) {
   // Logout Otomatis (Idle 15 Menit)
   const handleAutoLogout = async () => {
     try {
+      // Minta token CSRF baru sebelum logout
+      await getCsrfCookie();
       await apiFetch("/api/logout", { method: "POST" });
     } catch (err) {
       console.error("Auto logout error:", err);
@@ -77,16 +81,9 @@ export default function Layout({ children }: LayoutProps) {
       name: "Riwayat Transaksi",
       path: "/transactions",
       icon: "receipt_long",
-      // UBAH BAGIAN INI: Tambahkan "ADMIN"
       roles: ["ADMIN", "OWNER"]
     },
-    {
-      name: "Pelanggan",
-      path: "/customers",
-      icon: "group",
-      // (Opsional) Jika Admin juga perlu lihat data pelanggan, tambahkan "ADMIN" di sini
-      roles: ["OWNER"]
-    },
+    { name: "Pelanggan", path: "/customers", icon: "group", roles: ["OWNER"] },
     {
       name: "Audit Log",
       path: "/audit-logs",
