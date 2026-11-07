@@ -41,8 +41,6 @@ export default function Transactions() {
   const [returnReason, setReturnReason] = useState("");
 
   // --- AMBIL ROLE USER ---
-  // Catatan: Jika kamu menyimpan data user di React Context (misal useAuth()),
-  // silakan ganti baris ini dengan state context kamu (misal: const { user } = useAuth(); const userRole = user?.role;)
   const userRole = localStorage.getItem("user_role") || "ADMIN";
 
   const fetchTransactions = () => {
@@ -227,7 +225,11 @@ export default function Transactions() {
           </div>
 
           <div className="p-4 overflow-y-auto flex-1 bg-surface-container-lowest">
-            <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm font-mono text-xs text-black">
+            {/* TAMBAHKAN id="receipt-print-area" DI SINI */}
+            <div
+              id="receipt-print-area"
+              className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm font-mono text-xs text-black"
+            >
               <div className="text-center border-b pb-4 mb-4">
                 <h2 className="text-lg font-bold uppercase">Batam Seken</h2>
                 <p className="text-[10px] mt-1 text-gray-500">
@@ -301,6 +303,16 @@ export default function Transactions() {
                     chat
                   </span>{" "}
                   Kirim Struk ke WA
+                </button>
+                {/* TOMBOL CETAK STRUK BARU */}
+                <button
+                  onClick={() => window.print()}
+                  className="w-full py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    print
+                  </span>{" "}
+                  Cetak Struk
                 </button>
               </>
             )}
