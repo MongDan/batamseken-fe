@@ -566,9 +566,7 @@ export default function Kasir() {
                 <h2 className="text-lg font-bold uppercase tracking-wide">
                   Batam Seken Furniture
                 </h2>
-                <p className="text-[10px] mt-1">
-                  Cabang Nagoya Newton, Kota Batam
-                </p>
+                <p className="text-[10px] mt-1">Cabang Kerinci</p>
                 <p className="text-[10px]">Telp: 0811-7788-9900</p>
               </div>
               <div className="text-[10px] space-y-0.5 mb-3">

@@ -28,6 +28,15 @@ interface Transaction {
   items: TransactionItem[];
 }
 
+// --- FUNGSI FORMAT NOMOR HP OTOMATIS ---
+const formatPhoneNumber = (phone: string) => {
+  if (!phone) return "-";
+  // Hapus semua karakter selain angka
+  const cleaned = phone.replace(/\D/g, "");
+  // Sisipkan tanda hubung setiap 4 digit
+  return cleaned.replace(/(\d{4})(?=\d)/g, "$1-");
+};
+
 export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +49,6 @@ export default function Transactions() {
   >([]);
   const [returnReason, setReturnReason] = useState("");
 
-  // --- AMBIL ROLE USER ---
   const userRole = localStorage.getItem("user_role") || "ADMIN";
 
   const fetchTransactions = () => {
@@ -140,7 +148,10 @@ export default function Transactions() {
   // --- LOGIKA SHARE WA ---
   const handleShareWa = () => {
     if (!selectedTrx) return;
-    const phone = selectedTrx.customer.phone.replace(/^0/, "62");
+    // Format nomor HP ke format internasional untuk WA (628...)
+    const phone = selectedTrx.customer.phone
+      .replace(/^0/, "62")
+      .replace(/\D/g, "");
     const text = `Halo ${selectedTrx.customer.name}, terima kasih telah berbelanja di Batam Seken.\n\nNo Faktur: ${selectedTrx.invoice_no}\nTanggal: ${formatDate(selectedTrx.created_at)}\nTotal: ${formatRupiah(selectedTrx.total)}\n\nBarang yang dibeli tidak dapat ditukar/dikembalikan.`;
     window.open(
       `https://wa.me/${phone}?text=${encodeURIComponent(text)}`,
@@ -225,16 +236,14 @@ export default function Transactions() {
           </div>
 
           <div className="p-4 overflow-y-auto flex-1 bg-surface-container-lowest">
-            {/* TAMBAHKAN id="receipt-print-area" DI SINI */}
             <div
               id="receipt-print-area"
               className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm font-mono text-xs text-black"
             >
               <div className="text-center border-b pb-4 mb-4">
                 <h2 className="text-lg font-bold uppercase">Batam Seken</h2>
-                <p className="text-[10px] mt-1 text-gray-500">
-                  Cabang Nagoya Newton
-                </p>
+                {/* UBAH TEKS CABANG DI SINI */}
+                <p className="text-[10px] mt-1 text-gray-500">Cabang Kerinci</p>
                 <div className="mt-2 font-bold bg-gray-100 py-1 rounded">
                   {selectedTrx.invoice_no}
                 </div>
@@ -242,7 +251,8 @@ export default function Transactions() {
               <div className="mb-4 space-y-1">
                 <p>Tgl : {formatDate(selectedTrx.created_at)}</p>
                 <p>Nama: {selectedTrx.customer.name}</p>
-                <p>Telp: {selectedTrx.customer.phone}</p>
+                {/* GUNAKAN FUNGSI FORMAT HP DI SINI */}
+                <p>Telp: {formatPhoneNumber(selectedTrx.customer.phone)}</p>
                 <p>Almt: {selectedTrx.customer.address}</p>
               </div>
               <div className="space-y-3 border-y border-dashed py-4 mb-4">
@@ -304,7 +314,6 @@ export default function Transactions() {
                   </span>{" "}
                   Kirim Struk ke WA
                 </button>
-                {/* TOMBOL CETAK STRUK BARU */}
                 <button
                   onClick={() => window.print()}
                   className="w-full py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm flex items-center justify-center gap-2"
@@ -317,7 +326,6 @@ export default function Transactions() {
               </>
             )}
 
-            {/* TOMBOL HAPUS PERMANEN - HANYA UNTUK OWNER */}
             {selectedTrx.status !== "DELETED" && userRole === "OWNER" && (
               <button
                 onClick={() => handleDelete(selectedTrx.id)}
