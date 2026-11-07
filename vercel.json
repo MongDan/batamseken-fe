@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "https://batamseken-be-production.up.railway.app/api/:path*"
+    },
+    {
+      "source": "/sanctum/csrf-cookie",
+      "destination": "https://batamseken-be-production.up.railway.app/sanctum/csrf-cookie"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { apiFetch } from "../lib/api";
+import { apiFetch, getCsrfCookie } from "../lib/api"; // <-- Import getCsrfCookie
 import { showConfirm, showError } from "../lib/alert";
 import { useIdleTimer } from "../hooks/useIdleTimer";
 
@@ -23,6 +23,8 @@ export default function Layout({ children }: LayoutProps) {
       .catch(() => navigate("/login"));
   }, [navigate]);
 
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
   // Logout Manual (Tombol Logout)
   const handleLogout = async () => {
     const isConfirmed = await showConfirm(
@@ -31,7 +33,8 @@ export default function Layout({ children }: LayoutProps) {
     );
     if (isConfirmed) {
       try {
-        // Langsung tembak POST karena backend sudah membebaskan CSRF untuk logout
+        await getCsrfCookie(); // Minta token CSRF baru sebelum logout
+        await delay(100); // Jeda agar cookie tersimpan
         await apiFetch("/api/logout", { method: "POST" });
         navigate("/login");
       } catch (err) {
@@ -43,6 +46,8 @@ export default function Layout({ children }: LayoutProps) {
   // Logout Otomatis (Idle 15 Menit)
   const handleAutoLogout = async () => {
     try {
+      await getCsrfCookie();
+      await delay(100);
       await apiFetch("/api/logout", { method: "POST" });
     } catch (err) {
       console.error("Auto logout error:", err);

@@ -1,4 +1,5 @@
-export const API_BASE_URL = "https://batamseken-be-production.up.railway.app";
+// Ubah dari URL Railway menjadi kosong
+export const API_BASE_URL = ""; 
 
 function getCookie(name: string): string | null {
   const value = `; ${document.cookie}`;
