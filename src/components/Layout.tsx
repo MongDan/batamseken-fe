@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { apiFetch, getCsrfCookie } from "../lib/api";
+import { apiFetch } from "../lib/api";
 import { showConfirm, showError } from "../lib/alert";
 import { useIdleTimer } from "../hooks/useIdleTimer";
 
