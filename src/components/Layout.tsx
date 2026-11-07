@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { apiFetch, getCsrfCookie } from "../lib/api"; // <-- Import getCsrfCookie
+import { apiFetch, getCsrfCookie } from "../lib/api";
 import { showConfirm, showError } from "../lib/alert";
 import { useIdleTimer } from "../hooks/useIdleTimer";
 
@@ -31,8 +31,7 @@ export default function Layout({ children }: LayoutProps) {
     );
     if (isConfirmed) {
       try {
-        // Minta token CSRF baru sebelum logout
-        await getCsrfCookie();
+        // Langsung tembak POST karena backend sudah membebaskan CSRF untuk logout
         await apiFetch("/api/logout", { method: "POST" });
         navigate("/login");
       } catch (err) {
@@ -44,13 +43,10 @@ export default function Layout({ children }: LayoutProps) {
   // Logout Otomatis (Idle 15 Menit)
   const handleAutoLogout = async () => {
     try {
-      // Minta token CSRF baru sebelum logout
-      await getCsrfCookie();
       await apiFetch("/api/logout", { method: "POST" });
     } catch (err) {
       console.error("Auto logout error:", err);
     } finally {
-      // Redirect tanpa alert konfirmasi
       navigate("/login");
     }
   };
